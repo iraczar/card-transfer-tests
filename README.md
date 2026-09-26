@@ -1,5 +1,7 @@
 ![Tests](https://github.com/iraczar/card-transfer-tests/actions/workflows/tests.yml/badge.svg)
 
+Сборка красная намеренно: один тест воспроизводит найденный баг приложения, см. Issues.
+
 # Card Transfer Tests (Selenide + JUnit 5)
 
 Автотесты для функции перевода средств с карты на карту в тестовом приложении
