@@ -1,3 +1,5 @@
+![Tests](https://github.com/iraczar/card-transfer-tests/actions/workflows/tests.yml/badge.svg)
+
 # Card Transfer Tests (Selenide + JUnit 5)
 
 Автотесты для функции перевода средств с карты на карту в тестовом приложении
