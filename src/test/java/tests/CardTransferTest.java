@@ -5,17 +5,7 @@ import org.junit.jupiter.api.Test;
 import pages.TransferPage;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/**
- * Тесты перевода средств с карты на карту.
- *
- * Важно: баланс карт НЕ хардкодится в тестах (например "10000"), так как
- * SUT не перезапускается между тестами и баланс от прошлых прогонов
- * переносится дальше. Вместо этого баланс всегда считывается со страницы
- * непосредственно перед действием, а ожидаемый результат считается
- * относительно этого прочитанного значения.
- */
 class CardTransferTest extends BaseTest {
 
     @Test
@@ -39,6 +29,11 @@ class CardTransferTest extends BaseTest {
                 "Баланс карты-источника должен уменьшиться на сумму перевода");
     }
 
+    /**
+     * Баг: см. Issue #1 в репозитории — приложение позволяет перевести
+     * сумму больше остатка на карте-источнике, баланс уходит в минус.
+     * Тест намеренно оставлен "красным", так как воспроизводит реальный дефект.
+     */
     @Test
     void shouldNotTransferMoreThanAvailableBalance() {
         DataHelper.CardInfo firstCard = DataHelper.getFirstCardInfo();
@@ -50,11 +45,6 @@ class CardTransferTest extends BaseTest {
         TransferPage transferPage = dashboardPage.selectCardToTopUp(firstCard);
         transferPage.makeInvalidTransfer(String.valueOf(excessiveAmount), secondCard);
 
-        // Ожидание по здравому смыслу: при превышении остатка приложение должно
-        // показать ошибку и НЕ выполнять перевод. Если по факту перевод всё же
-        // проходит (баг!) — тест упадёт здесь, и это повод завести issue в GitHub,
-        // а не подгонять тест под баг.
-        assertTrue(transferPage.isErrorShown(),
-                "При переводе суммы больше остатка ожидается сообщение об ошибке");
+        transferPage.shouldShowError("Ошибка");
     }
 }

@@ -26,23 +26,5 @@ jobs:
       - name: Start SUT (app-ibank)
         run: java -jar artifacts/app-ibank-build-for-testers.jar &
 
-      - name: Wait for SUT to start
-        run: |
-          for i in {1..30}; do
-            if curl -s http://localhost:9999 > /dev/null; then
-              echo "SUT is up"
-              break
-            fi
-            echo "Waiting for SUT..."
-            sleep 2
-          done
-
       - name: Run tests
-        run: ./gradlew clean test
-
-      - name: Upload test report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-report
-          path: build/reports/tests/test
+        run: ./gradlew clean test --info -Dselenide.headless=true
